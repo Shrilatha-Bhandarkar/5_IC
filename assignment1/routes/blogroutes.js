@@ -1,12 +1,13 @@
 
 const express = require('express');
-const router = express.Router();
 const blogController = require('../controllers/blogController');
-const isAuthenticated = require('../middleware/authMiddleware');
-const validateAuthorID = require('../middleware/validationMiddleware');
+const validationMiddleware = require('../middleware/validationMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/', isAuthenticated, blogController.getAllBlogs);
-router.post('/', isAuthenticated, blogController.createBlog);
-router.get('/:authorID', isAuthenticated, validateAuthorID, blogController.getBlogByAuthorID);
+const router = express.Router();
+
+router.get('/', authMiddleware.logRequests, blogController.getAllBlogs);
+router.post('/', validationMiddleware.validateCredentials, blogController.createBlog);
+router.get('/:authorId', validationMiddleware.validateAuthorIdParam, blogController.getBlogsByAuthorId);
 
 module.exports = router;
